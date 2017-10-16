@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 # -*- coding: 850 -*-
-# Crear pares de autores de una publicación de artículo o libro
+# extraer registros de un archivo txt
 # @utor: Leonardo Marcos Santiago
 
 #import os
 import shutil
 
 def leer_archivo(lista_registros):
-	archivo = open("arch.txt", "r")
+	archivo = open("aero.txt", "r")
 	registro = ""
 	for linea in archivo.readlines():
 		if(linea != '\n'):
@@ -16,6 +16,7 @@ def leer_archivo(lista_registros):
 			registro = registro.replace('\n',' ')
 			lista_registros.append(registro)
 			registro = ""
+
 def escribir_en_archivo(lista_registros):
     archivo = open('capturas1.csv','w')
     for registro in lista_registros:
@@ -32,17 +33,8 @@ def eliminar_lineas_vacias(registros):
 	lista = []
 	for linea in registros:
 		if(len(linea) != 0):
-			#contador = contador + 1
-			# print("registro " + str(contador))
-			#print(linea)
 			lista.append(linea)
 	return lista
-
-def extraer_datos(registros,paises):
-	lista_datos = []
-	for registro in registros:
-		lista_datos.append(detalle_registro(registro,paises))
-	escribir_en_archivo(lista_datos)
 
 def buscar_pais(registro,paises):
 	countrie = "XXXXX"
@@ -52,22 +44,11 @@ def buscar_pais(registro,paises):
 			break
 	return countrie
 
-# def buscar_nombre(registros):
-# 	for registro in registros:
-# 		if(tiene_alias(registro)):
-# 			print('')
-			#extraer_alias(registro)
-		#if('(' in registro):
-
-		#	print(registro.index('('))
-		#else:
-		#	print("no hay parantesis")
 def es_pais(alias, paises):
 	es_pais = False
 	for pais in paises:
 		if(alias == pais):
 			es_pais = True
-			# print("paisSSSssssssssslllllpaisSSSssssssssslllllpaisSSSssssssssslllllpaisSSSssssssssslllll")
 			break
 	return es_pais
 
@@ -82,12 +63,6 @@ def tiene_alias_dif_individual(registro,paises):
 		alias = registro[parantesis_ini+1 : parentesis_fin]
 		if(alias != 'individual' and not es_pais(alias,paises)):
 			tiene_alias = True
-		# else:
-		# 	print("es individual o es pais _>>>>>>>>>>>>>>>>>>>>>>>>>>>")
-		# 	print("::::::::::::::::::::::::")
-		# 	print(registro)
-		# 	print("::::::::::::::::::::::::")
-		# 	print("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<")
 	return tiene_alias
 
 
@@ -121,8 +96,6 @@ def extraer_alias(registro):
 		parentesis_ini = registro.find('(')
 		parentesis_fin = registro.find(')')
 		alias = registro[parentesis_ini +1: parentesis_fin]
-	# else:
-	# 	print(registro)
 	return alias
 
 def extraer_nombres(registro,paises):
@@ -168,9 +141,6 @@ def detalle_registro(registro,paises):
 				minimo = pos_punto_coma
 			print(minimo)
 			last_name = registro[0: minimo]
-			# first_name = nombres[0].strip()
-			# if(len(nombres) > 1):
-			# 	last_name = nombres[1].strip()
 		else:
 			primer_coma = registro.find(",")
 			first_name = registro[0: primer_coma]
@@ -182,12 +152,17 @@ def detalle_registro(registro,paises):
 		alias = '';	
 	if(countrie == "XXXXX"):
 		countrie = '';
-	detalle.append(first_name.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').strip())
-	detalle.append(last_name.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').strip())
-	detalle.append(alias.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').strip())
-	detalle.append(countrie.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').strip())
+	detalle.append(first_name.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').replace(".",'').replace("-",'').strip())
+	detalle.append(last_name.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').replace(".",'').replace("-",'').strip())
+	detalle.append(alias.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').replace(".",'').replace("-",'').strip())
+	detalle.append(countrie.replace(';','').replace(',','').replace('','').replace('a.k.a.','').replace('"','').replace('  ', ' ').replace("'",' ').replace(".",'').replace("-",'').strip())
 	return detalle
 
+def extraer_datos(registros,paises):
+	lista_datos = []
+	for registro in registros:
+		lista_datos.append(detalle_registro(registro,paises))
+	escribir_en_archivo(lista_datos)
 
 	
 # os.system("reset")
