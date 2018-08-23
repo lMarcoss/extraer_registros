@@ -41,28 +41,16 @@ def escribir_en_archivo(lista_registros):
     for registro in lista_registros:
     	if(oiis_start in registro or oiis_end in registro):
     		registro_formateado = registro + "\n"
-    		#archivo.write(registro + "\n")
     	elif(oii_start in registro or oii_end in registro):
     		registro_formateado = "\t" + registro + "\n"
-    		#archivo.write("\t" + registro + "\n")
     	else:
     		registro_formateado = "\t\t" +registro + "\n"
-    		#archivo.write("\t\t" +registro + "\n")
     	archivo.write(registro_formateado)
-    	print(registro_formateado)
+    	print(registro_formateado.replace('\n', ''))
     archivo.close()
-
-def eliminar_lineas_vacias(registros):
-	contador = 0
-	lista = []
-	for linea in registros:
-		if(len(linea) != 0):
-			lista.append(linea)
-	return lista
 
 #os.system("reset")
 lineas = []
 registros = []
 leer_archivo(lineas)
-registros = eliminar_lineas_vacias(lineas)
-escribir_en_archivo(registros)
+escribir_en_archivo(lineas)
