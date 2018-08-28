@@ -87,6 +87,8 @@ def escribir_en_archivo(lista_registros, file_xml):
 				if(start_oii == False):
 					start_oii = True
 					if(len(row_oii) == 3):
+						row_oii.append(file_xml)
+						row_oii.append(file_xml.replace(solicitud, ''))
 						rows_oiis.append(row_oii)
 					row_oii = []
 				if(start_oii == True):
@@ -118,26 +120,40 @@ def print_in_csv(rows):
     file_oii = open('oiis_output.csv','w')
     for registro in rows:
     	for x in registro:
-    		print(x[0])
-    		print(x[1])
-    		print(x[2])
-    		file_oii.write(x[0] + ", " + x[1]+ ", " + x[2].replace(',','') + "\n")
+    		file_oii.write(x[0] + ", " + x[1]+ ", " + x[2].replace(',','')+ ", " + x[3]+ ", " +x[4]+ "\n")
 	#file_oii.close()
+
+def crear_diccionario_datos(rows):
+	padec = {}
+	for row in rows:
+		for col in row:
+			padec[col[1]] = [col[0], col[1], col[2], col[3], col[4]]
+	file_oii_i = open("oiis_diccionario_padec.csv",'w')
+	for dia, codigos in padec.items():
+		#file_oii_i.write(dia + "," + str(codigos).replace('[', '').replace(']','') + "\n")
+		file_oii_i.write(dia + "," + "\""+ str(codigos[0]) + "\"" +"," + "\""+ codigos[2]+ "\"" + "," + codigos[3] + ","+codigos[4]+ "\n")
+	file_oii_i.close()
+	print('end')
 
 #os.system("reset")
 listado = os.listdir(os.getcwd())
 extension = ".xml"
-nuevo_negocio = "RECEIVED_TRAN05c.xml"
-inclusion = "RECEIVED_TRAN39e.xml"
+pattern_file = "RECEIVED_TRAN"
+nuevo_negocio = "RECEIVED_TRAN05e.xml"
+inclusion = "RECEIVED_TRAN39g.xml"
 incremento = "RECEIVED_TRAN08g.xml"
 
 datos = []
 for elemento in listado:
-	if(os.path.isfile(elemento) and (nuevo_negocio in elemento or inclusion in elemento or incremento in elemento)):
+	#if(os.path.isfile(elemento) and pattern_file in elemento and extension in elemento):
+	if(os.path.isfile(elemento) and "oii_" not in elemento and (nuevo_negocio in elemento or inclusion in elemento or incremento in elemento)):
 		print("--> %s es un archivo" % elemento)
 		data = obtener_registros_oii_archivo(elemento)
 		if data is not None:
 			datos.append(data)
 print(datos)
 print_in_csv(datos)
+crear_diccionario_datos(datos)
+#print_in_csv(diccionario, "oiis_output_dicc.csv")
+
 
