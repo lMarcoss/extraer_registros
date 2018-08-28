@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: 850 -*-
-# extraer registros de un archivo txt
+# extraer registros de un archivo xml
 # @utor: Leonardo Marcos Santiago
 
 import os
@@ -112,9 +112,6 @@ def obtener_registros_oii_archivo(name_file_input):
 	leer_archivo(lineas, name_file_input)
 	rows = escribir_en_archivo(lineas, name_file_input)
 	return rows
-	#obtener_datos_oii_por_separado(lineas, registros)
-	#escribir_en_archivo_oii(registros)
-
 
 def print_in_csv(rows):
     file_oii = open('oiis_output.csv','w')
@@ -128,24 +125,21 @@ def crear_diccionario_datos(rows):
 	for row in rows:
 		for col in row:
 			padec[col[1]] = [col[0], col[1], col[2], col[3], col[4]]
+	#Imprimir el diccionario en archivo
 	file_oii_i = open("oiis_diccionario_padec.csv",'w')
 	for dia, codigos in padec.items():
-		#file_oii_i.write(dia + "," + str(codigos).replace('[', '').replace(']','') + "\n")
 		file_oii_i.write(dia + "," + "\""+ str(codigos[0]) + "\"" +"," + "\""+ codigos[2]+ "\"" + "," + codigos[3] + ","+codigos[4]+ "\n")
 	file_oii_i.close()
 	print('end')
 
 #os.system("reset")
 listado = os.listdir(os.getcwd())
-extension = ".xml"
-pattern_file = "RECEIVED_TRAN"
 nuevo_negocio = "RECEIVED_TRAN05e.xml"
 inclusion = "RECEIVED_TRAN39g.xml"
 incremento = "RECEIVED_TRAN08g.xml"
 
 datos = []
 for elemento in listado:
-	#if(os.path.isfile(elemento) and pattern_file in elemento and extension in elemento):
 	if(os.path.isfile(elemento) and "oii_" not in elemento and (nuevo_negocio in elemento or inclusion in elemento or incremento in elemento)):
 		print("--> %s es un archivo" % elemento)
 		data = obtener_registros_oii_archivo(elemento)
@@ -154,6 +148,3 @@ for elemento in listado:
 print(datos)
 print_in_csv(datos)
 crear_diccionario_datos(datos)
-#print_in_csv(diccionario, "oiis_output_dicc.csv")
-
-
